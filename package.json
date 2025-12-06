@@ -1,0 +1,36 @@
+{
+  "name": "claude-dev-setup-macos",
+  "version": "1.0.0",
+  "description": "Hands-off setup wizard for Claude Code development environment (macOS)",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "test": "electron-forge start -- --test",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "author": "Cato-Pine",
+  "license": "MIT",
+  "devDependencies": {
+    "@electron-forge/cli": "^7.2.0",
+    "@electron-forge/maker-zip": "^7.2.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.2.0",
+    "electron": "^28.0.0",
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.34.5"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "asar": true,
+        "icon": "./assets/icons/icon.png"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": ["darwin"]
+        }
+      ]
+    }
+  }
+}

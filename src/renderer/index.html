@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Claude Dev Setup</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar with milestone checklist -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>Claude Dev Setup</h1>
+        <div id="testModeBadge" class="test-mode-badge hidden">TEST MODE</div>
+        <div class="journey">
+          <span class="journey-start">New to coding</span>
+          <span class="journey-arrow">→</span>
+          <span class="journey-end">Ready to build</span>
+        </div>
+      </div>
+
+      <nav class="milestones">
+        <div class="milestone" data-step="welcome" data-complete="false">
+          <span class="milestone-icon">○</span>
+          <span class="milestone-label">Get Started</span>
+        </div>
+        <div class="milestone" data-step="prerequisites" data-complete="false">
+          <span class="milestone-icon">○</span>
+          <span class="milestone-label">Check System <span class="milestone-type auto">auto</span></span>
+        </div>
+        <div class="milestone" data-step="install" data-complete="false">
+          <span class="milestone-icon">○</span>
+          <span class="milestone-label">Install Tools <span class="milestone-type auto">auto</span></span>
+        </div>
+        <div class="milestone" data-step="accounts" data-complete="false">
+          <span class="milestone-icon">○</span>
+          <span class="milestone-label">Create Accounts <span class="milestone-type user">you</span></span>
+        </div>
+        <div class="milestone" data-step="gitconfig" data-complete="false">
+          <span class="milestone-icon">○</span>
+          <span class="milestone-label">Configure Git <span class="milestone-type user">you</span></span>
+        </div>
+        <div class="milestone" data-step="folders" data-complete="false">
+          <span class="milestone-icon">○</span>
+          <span class="milestone-label">Set Up Workspace <span class="milestone-type auto">auto</span></span>
+        </div>
+        <div class="milestone" data-step="success" data-complete="false">
+          <span class="milestone-icon">○</span>
+          <span class="milestone-label">First Project <span class="milestone-type user">you</span></span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="progress-summary">
+          <span id="completedCount">0</span> of 7 complete
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content area -->
+    <main class="main-content">
+      <!-- Screen 1: Welcome -->
+      <section id="screen-welcome" class="screen active">
+        <div class="screen-header">
+          <h2>Welcome!</h2>
+          <p class="subtitle">Let's get you set up to code with AI assistance</p>
+        </div>
+
+        <div class="screen-body">
+          <div class="two-columns">
+            <div class="column">
+              <h3>What we'll set up:</h3>
+              <ul class="setup-list">
+                <li><strong>VS Code</strong> — Your code editor</li>
+                <li><strong>Git</strong> — Save your work</li>
+                <li><strong>GitHub</strong> — Share & backup code</li>
+                <li><strong>Claude Code</strong> — AI assistant</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>What you'll do:</h3>
+              <ul class="setup-list">
+                <li>Create a Claude account</li>
+                <li>Create a GitHub account</li>
+                <li>Enter your name & email</li>
+                <li>Choose project folder</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen-footer">
+          <div class="time-estimate">About 10-15 minutes</div>
+          <button class="btn btn-primary btn-large" id="btnWelcomeNext">Let's Go →</button>
+        </div>
+      </section>
+
+      <!-- Screen 2: Prerequisites Check -->
+      <section id="screen-prerequisites" class="screen">
+        <div class="screen-header">
+          <h2>Checking Your System</h2>
+          <p class="subtitle">Seeing what's already installed</p>
+        </div>
+
+        <div class="screen-body">
+          <div class="checklist" id="prerequisitesList">
+            <div class="check-item" data-software="vscode">
+              <span class="check-icon">⏳</span>
+              <div class="check-info">
+                <span class="check-label">VS Code</span>
+                <span class="check-status">Checking...</span>
+              </div>
+            </div>
+            <div class="check-item" data-software="git">
+              <span class="check-icon">⏳</span>
+              <div class="check-info">
+                <span class="check-label">Git</span>
+                <span class="check-status">Checking...</span>
+              </div>
+            </div>
+            <div class="check-item" data-software="ghcli">
+              <span class="check-icon">⏳</span>
+              <div class="check-info">
+                <span class="check-label">GitHub CLI</span>
+                <span class="check-status">Checking...</span>
+              </div>
+            </div>
+            <div class="check-item" data-software="claudeExtension">
+              <span class="check-icon">⏳</span>
+              <div class="check-info">
+                <span class="check-label">Claude Code Extension</span>
+                <span class="check-status">Checking...</span>
+              </div>
+            </div>
+          </div>
+          <div id="prerequisitesResult" class="result-box hidden"></div>
+        </div>
+
+        <div class="screen-footer">
+          <button class="btn btn-secondary" id="btnPrerequisitesBack">← Back</button>
+          <button class="btn btn-primary" id="btnPrerequisitesNext" disabled>Continue →</button>
+        </div>
+      </section>
+
+      <!-- Screen 3: Installation -->
+      <section id="screen-install" class="screen">
+        <div class="screen-header">
+          <h2>Installing Tools</h2>
+          <p class="subtitle" id="installMessage">This may take a few minutes...</p>
+        </div>
+
+        <div class="screen-body">
+          <div class="install-progress" id="installProgress">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <div class="screen-footer">
+          <button class="btn btn-primary" id="btnInstallNext" disabled>Continue →</button>
+        </div>
+      </section>
+
+      <!-- Screen 4: Account Setup -->
+      <section id="screen-accounts" class="screen">
+        <div class="screen-header">
+          <h2>Create Your Accounts</h2>
+          <p class="subtitle">You'll need these to use Claude Code</p>
+        </div>
+
+        <div class="screen-body">
+          <div class="account-cards">
+            <div class="account-card">
+              <div class="account-header">
+                <h3>Claude</h3>
+                <span class="account-badge" id="claudeBadge">Required</span>
+              </div>
+              <p>Your AI coding assistant</p>
+              <div class="plan-info">
+                <strong>Recommended:</strong> Pro plan ($20/mo)<br>
+                <span class="plan-note">Max plan available for heavy usage</span>
+              </div>
+              <button class="btn btn-outline" id="btnOpenClaude">Open Claude →</button>
+              <label class="checkbox-label">
+                <input type="checkbox" id="claudeAccountDone">
+                <span>I have a Claude account with Pro or Max</span>
+              </label>
+            </div>
+
+            <div class="account-card">
+              <div class="account-header">
+                <h3>GitHub</h3>
+                <span class="account-badge" id="githubBadge">Required</span>
+              </div>
+              <p>Store & share your code</p>
+              <div class="plan-info">
+                <strong>Free:</strong> Personal account is all you need
+              </div>
+              <button class="btn btn-outline" id="btnOpenGitHub">Open GitHub →</button>
+              <label class="checkbox-label">
+                <input type="checkbox" id="githubAccountDone">
+                <span>I have a GitHub account</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen-footer">
+          <button class="btn btn-secondary" id="btnAccountsBack">← Back</button>
+          <button class="btn btn-primary" id="btnAccountsNext" disabled>Continue →</button>
+        </div>
+      </section>
+
+      <!-- Screen 5: Git Configuration -->
+      <section id="screen-gitconfig" class="screen">
+        <div class="screen-header">
+          <h2>Set Up Git</h2>
+          <p class="subtitle">This info appears on your code contributions</p>
+        </div>
+
+        <div class="screen-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="gitName">Your Name</label>
+              <input type="text" id="gitName" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label for="gitEmail">Your Email</label>
+              <input type="email" id="gitEmail" placeholder="john@example.com">
+            </div>
+          </div>
+
+          <div class="github-auth-section">
+            <div class="auth-header">
+              <h3>Connect to GitHub</h3>
+              <span id="githubAuthStatus" class="status-badge"></span>
+            </div>
+            <p>This lets you push code to GitHub from the command line</p>
+            <button class="btn btn-outline" id="btnGitHubAuth">Authenticate with GitHub →</button>
+          </div>
+        </div>
+
+        <div class="screen-footer">
+          <button class="btn btn-secondary" id="btnGitConfigBack">← Back</button>
+          <button class="btn btn-primary" id="btnGitConfigNext" disabled>Continue →</button>
+        </div>
+      </section>
+
+      <!-- Screen 6: Folder Setup -->
+      <section id="screen-folders" class="screen">
+        <div class="screen-header">
+          <h2>Choose Your Workspace</h2>
+          <p class="subtitle">Where your projects will live</p>
+        </div>
+
+        <div class="screen-body">
+          <div class="form-group">
+            <label for="projectsPath">Projects Folder</label>
+            <div class="path-input">
+              <input type="text" id="projectsPath" readonly>
+              <button class="btn btn-small" id="btnBrowseProjects">Browse</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cloudPath">Cloud Sync (Optional)</label>
+            <div class="path-input">
+              <input type="text" id="cloudPath" readonly placeholder="For session notes backup">
+              <button class="btn btn-small" id="btnBrowseCloud">Browse</button>
+            </div>
+            <div id="detectedProviders" class="detected-providers"></div>
+          </div>
+        </div>
+
+        <div class="screen-footer">
+          <button class="btn btn-secondary" id="btnFoldersBack">← Back</button>
+          <button class="btn btn-primary" id="btnSetupFolders">Set Up Workspace →</button>
+        </div>
+      </section>
+
+      <!-- Screen 7: Success & First Project Guide -->
+      <section id="screen-success" class="screen">
+        <div class="screen-header success-header">
+          <div class="success-icon">✓</div>
+          <h2>You're Ready!</h2>
+          <p class="subtitle">All tools installed and configured</p>
+        </div>
+
+        <div class="screen-body">
+          <div class="first-project-guide">
+            <h3>Create Your First Project</h3>
+            <ol class="guide-steps">
+              <li>
+                <strong>Open VS Code</strong>
+                <span>Click the button below or find it in your Start menu</span>
+              </li>
+              <li>
+                <strong>Open your projects folder</strong>
+                <code id="projectPath"></code>
+              </li>
+              <li>
+                <strong>Start a Claude session</strong>
+                <span>Type <code>/hello</code> in the Claude panel</span>
+              </li>
+              <li>
+                <strong>Tell Claude what to build</strong>
+                <span>Example: "Create a simple todo list app"</span>
+              </li>
+            </ol>
+          </div>
+
+          <div class="pro-tips">
+            <h4>Pro Tips</h4>
+            <ul>
+              <li>Use <code>/bye</code> when done for the day — it saves your progress</li>
+              <li>Claude remembers context within a session</li>
+              <li>Be specific about what you want to build</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="screen-footer">
+          <button class="btn btn-primary btn-large" id="btnOpenVSCode">Open VS Code →</button>
+          <button class="btn btn-secondary" id="btnCloseApp">Close</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Celebration overlay -->
+  <div id="celebrationOverlay" class="celebration-overlay hidden">
+    <div class="celebration-content">
+      <span class="celebration-emoji">🎉</span>
+      <span class="celebration-text" id="celebrationText">Milestone complete!</span>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
