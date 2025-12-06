@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: macos-latest
@@ -45,11 +48,12 @@ jobs:
           name: claude-dev-setup-macos
           path: ./dist
 
+      - name: List downloaded files
+        run: find ./dist -type f
+
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          files: ./dist/**/*.zip
+          files: ./dist/*.zip
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
