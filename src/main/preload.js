@@ -12,7 +12,10 @@ contextBridge.exposeInMainWorld('api', {
 
   // Install software
   installSoftware: (software) => ipcRenderer.invoke('install-software', software),
-  onInstallProgress: (callback) => ipcRenderer.on('install-progress', (event, progress) => callback(progress)),
+  onInstallProgress: (callback) => {
+    ipcRenderer.removeAllListeners('install-progress');
+    ipcRenderer.on('install-progress', (event, progress) => callback(progress));
+  },
 
   // Open external URL
   openExternal: (url) => ipcRenderer.invoke('open-external', url),
@@ -29,7 +32,10 @@ contextBridge.exposeInMainWorld('api', {
 
   // Clone repo
   cloneWorkflowRepo: (projectsPath) => ipcRenderer.invoke('clone-workflow-repo', projectsPath),
-  onCloneProgress: (callback) => ipcRenderer.on('clone-progress', (event, progress) => callback(progress)),
+  onCloneProgress: (callback) => {
+    ipcRenderer.removeAllListeners('clone-progress');
+    ipcRenderer.on('clone-progress', (event, progress) => callback(progress));
+  },
 
   // GitHub auth
   githubAuth: () => ipcRenderer.invoke('github-auth')

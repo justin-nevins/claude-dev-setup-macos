@@ -139,11 +139,26 @@ async function installHomebrew(onProgress) {
 
   return new Promise((resolve, reject) => {
     // Homebrew installation script
-    const installCmd = '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"';
+    // NONINTERACTIVE=1 skips the sudo password prompt and confirmation,
+    // which would hang in Electron where there is no TTY.
+    const installCmd = 'curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | /bin/bash';
 
     const installer = spawn('/bin/bash', ['-c', installCmd], {
-      stdio: 'inherit'
+      stdio: 'pipe',
+      env: { ...process.env, NONINTERACTIVE: '1' }
     });
+
+    installer.stdout.on('data', (data) => {
+      const msg = data.toString();
+      if (msg.includes('%')) {
+        const match = msg.match(/(\d+)%/);
+        if (match) {
+          onProgress({ software: 'homebrew', stage: 'installing', percent: parseInt(match[1]) });
+        }
+      }
+    });
+
+    installer.stderr.on('data', () => {});
 
     installer.on('close', (code) => {
       if (code === 0) {
@@ -168,7 +183,7 @@ async function installVSCode(onProgress) {
 
     return new Promise((resolve, reject) => {
       const installer = spawn('brew', ['install', '--cask', 'visual-studio-code'], {
-        stdio: 'inherit'
+        stdio: 'pipe'
       });
 
       installer.on('close', (code) => {
@@ -213,7 +228,7 @@ async function installGit(onProgress) {
   if (hasHomebrew) {
     return new Promise((resolve, reject) => {
       const installer = spawn('brew', ['install', 'git'], {
-        stdio: 'inherit'
+        stdio: 'pipe'
       });
 
       installer.on('close', (code) => {
@@ -232,7 +247,7 @@ async function installGit(onProgress) {
   // Fallback: Install Xcode Command Line Tools (includes Git)
   return new Promise((resolve, reject) => {
     const installer = spawn('xcode-select', ['--install'], {
-      stdio: 'inherit'
+      stdio: 'pipe'
     });
 
     installer.on('close', (code) => {
@@ -258,7 +273,7 @@ async function installGitHubCLI(onProgress) {
 
   return new Promise((resolve, reject) => {
     const installer = spawn('brew', ['install', 'gh'], {
-      stdio: 'inherit'
+      stdio: 'pipe'
     });
 
     installer.on('close', (code) => {

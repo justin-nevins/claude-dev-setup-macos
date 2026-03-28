@@ -118,7 +118,7 @@ async function setupFolders(projectsPath, cloudPath) {
 
 // Clone the workflow setup repository
 async function cloneWorkflowRepo(projectsPath, onProgress) {
-  const repoUrl = 'https://github.com/Cato-Pine/claude-workflow-setup.git';
+  const repoUrl = 'https://github.com/justin-nevins/claude-workflow-setup.git';
   const targetDir = path.join(projectsPath, 'claude-workflow-setup');
 
   return new Promise((resolve, reject) => {
@@ -176,13 +176,28 @@ async function cloneWorkflowRepo(projectsPath, onProgress) {
 // Authenticate with GitHub CLI
 function authenticateGitHub() {
   return new Promise((resolve, reject) => {
-    exec('gh auth login --web', (error) => {
-      if (error) {
-        reject(error);
-      } else {
+    // Use fully non-interactive flags so it doesn't hang waiting for TTY input.
+    // --web opens the browser for OAuth, -h and -p skip the interactive prompts.
+    const gh = spawn('gh', ['auth', 'login', '-h', 'github.com', '-p', 'https', '--web'], {
+      stdio: 'pipe',
+      shell: true
+    });
+
+    let stderr = '';
+
+    gh.stderr.on('data', (data) => {
+      stderr += data.toString();
+    });
+
+    gh.on('close', (code) => {
+      if (code === 0) {
         resolve(true);
+      } else {
+        reject(new Error(stderr || `gh auth login failed with code ${code}`));
       }
     });
+
+    gh.on('error', reject);
   });
 }
 
