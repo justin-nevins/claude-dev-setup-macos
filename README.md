@@ -2,7 +2,16 @@
 
 A hands-off setup wizard for the Claude Code development environment on macOS. It walks you through installing everything you need to start coding with Claude - VS Code, Git, GitHub CLI, and the Claude Code extension - then configures your workspace so you're ready to go.
 
-## Install from Source (Step by Step)
+## Download (Easiest)
+
+1. Download the latest ZIP from the [Releases page](https://github.com/justin-nevins/claude-dev-setup-macos/releases/latest)
+2. Double-click the ZIP to extract it
+3. Open **claude-dev-setup-macos.app**
+4. If macOS says the app "can't be opened": right-click the app, select **Open**, then click **Open** in the dialog. You only have to do this once.
+
+> **Note:** The current build is for Apple Silicon Macs (M1/M2/M3/M4). If you have an older Intel Mac, follow the "Build from Source" instructions below instead.
+
+## Build from Source (Step by Step)
 
 This is for anyone on a Mac, even if you've never used a terminal before.
 
